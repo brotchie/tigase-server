@@ -71,6 +71,10 @@ public class BoshSessionCache {
 	private static final SimpleDateFormat sdf =
 		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
+    /* MyStyleChat extensions. */
+    public static final String[] MESSAGE_X_PATH = { Message.ELEM_NAME, "x" };
+    public static final String MYSTYLECHAT_NS = "jabber:x:mystylechat";
+
 	//~--- fields ---------------------------------------------------------------
 
 	/**
@@ -138,14 +142,15 @@ public class BoshSessionCache {
 	 */
 	public void addFromMessage(Element message) {
 		Element body = message.findChildStaticStr(Message.MESSAGE_BODY_PATH);
+        Element x = message.findChildStaticStr(MESSAGE_X_PATH);
 
-		if (body == null) {
+		if (body == null && x == null) {
 			return;
 		}
 
 		String jid = message.getAttributeStaticStr(Packet.FROM_ATT);
 
-		addMsgBody(jid, Packet.FROM_ATT, body);
+		addMsgBody(jid, Packet.FROM_ATT, body != null ? body : x);
 	}
 
 	/**
@@ -189,14 +194,15 @@ public class BoshSessionCache {
 	 */
 	public void addToMessage(Element message) {
 		Element body = message.findChildStaticStr(Message.MESSAGE_BODY_PATH);
+        Element x = message.findChildStaticStr(MESSAGE_X_PATH);
 
-		if (body == null) {
+		if (body == null && x == null) {
 			return;
 		}
 
 		String jid = message.getAttributeStaticStr(Packet.TO_ATT);
 
-		addMsgBody(jid, Packet.TO_ATT, body);
+		addMsgBody(jid, Packet.TO_ATT, body != null ? body : x);
 	}
 
 	//~--- get methods ----------------------------------------------------------
